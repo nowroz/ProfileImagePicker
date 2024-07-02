@@ -19,31 +19,45 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             List {
-                ForEach(users) { user in
-                    HStack(spacing: 16) {
-                        ProfileImageView(imageState: user.imageState)
-                            .frame(width: 40, height: 40)
-                            .clipShape(.circle)
-                        
-                        VStack(alignment: .leading, spacing: 0) {
-                            Text(user.name)
-                                .font(.headline)
-                            Text("@\(user.username)")
-                                .foregroundStyle(.secondary)
+                if users.isEmpty {
+                    ContentUnavailableView {
+                        Label("No Users Found", systemImage: "person.2.fill")
+                    } description: {
+                        Text("You have not added any users yet.")
+                    } actions: {
+                        addUserButton
+                    }
+                } else {
+                    ForEach(users) { user in
+                        HStack(spacing: 16) {
+                            ProfileImageView(imageState: user.imageState)
+                                .frame(width: 40, height: 40)
+                                .clipShape(.circle)
+                            
+                            VStack(alignment: .leading, spacing: 0) {
+                                Text(user.name)
+                                    .font(.headline)
+                                Text("@\(user.username)")
+                                    .foregroundStyle(.secondary)
+                            }
                         }
                     }
+                    .onDelete(perform: deleteUsers)
                 }
-                .onDelete(perform: deleteUsers)
             }
             .navigationTitle("Users")
             .toolbar {
-                Button("Add User", systemImage: "person.fill.badge.plus") {
-                    showingAddUserSheet = true
-                }
+                addUserButton
             }
             .sheet(isPresented: $showingAddUserSheet) {
                 AddUserView()
             }
+        }
+    }
+    
+    var addUserButton: some View {
+        Button("Add User", systemImage: "person.fill.badge.plus") {
+            showingAddUserSheet = true
         }
     }
     
