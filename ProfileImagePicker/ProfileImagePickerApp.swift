@@ -14,6 +14,6 @@ struct ProfileImagePickerApp: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: User.self)
+        .modelContainer(for: User.self, isUndoEnabled: true)
     }
 }
